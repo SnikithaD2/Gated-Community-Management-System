@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Living</title>
+    <link rel="stylesheet" href="owner.css">
+    <style>
+        .go-back {
+            background: white;
+            border: none;
+            font-size: 18px;
+            border-radius: 5px;
+            padding: 5px 12px;
+            cursor: pointer;
+            margin-right: 5px; /* Reduce spacing */
+        }
+
+        .user-info {
+            position: relative;
+            cursor: pointer;
+        }
+    
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            flex-direction: column;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            z-index: 999;
+        }
+    
+        .dropdown-menu a {
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+            border-bottom: 1px solid #eee;
+        }
+    
+        .dropdown-menu a:last-child {
+            border-bottom: none;
+        }
+    
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+    
+</head>
+<div class="overlay-image"></div>
+<body>
+    <header>
+        <div>
+            <h1 class="main-head">Aura Living</h1>
+            <p class="tagline">A Dream Come True</p>
+        </div>
+        <button class="go-back" onclick="window.location.href='owner.html'">Go Back</button>
+        <div class="user-info">
+            <span id="username-display">Username</span>
+            <img src="images/userIcon.png" alt="User Icon" class="user-icon">
+            <div id="userDropdown" class="dropdown-menu">
+                <a href="profile.html">Profile</a>
+                <a href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div style="font-family: 'PT Serif'; 
+                margin-top: 30px;
+                margin-left: 30px;
+                font-size: 30px;
+                color: #424242;">
+        Due Payments
+    </div>
+
+    <!-- Payment Table -->
+    <div class="table-container">
+        <table class="payment-table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Payment Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="dueTable">
+                
+            </tbody>
+        </table>
+    </div>
+
+    <div style="font-family: 'PT Serif'; 
+                margin-top: 30px;
+                margin-left: 30px;
+                font-size: 30px;
+                color: #424242;">
+        Payment History
+    </div>
+
+    <!-- Payment Table -->
+    <div class="table-container">
+        <table class="payment-table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Payment Name</th>
+                </tr>
+            </thead>
+            <tbody id="paidTable">
+                
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="text-center footer-text">
+        Live your Dream with Aura
+    </footer>
+
+    <script>
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+    
+        document.addEventListener("DOMContentLoaded", () => {
+            const email = localStorage.getItem("userEmail");
+            const userType = localStorage.getItem("userType");
+            const usernameDisplay = document.getElementById("username-display");
+            const dropdown = document.getElementById("userDropdown");
+    
+            if (!email || !userType) {
+                usernameDisplay.textContent = "Not logged in";
+                return;
+            }
+    
+            fetch(`/getUserDetails?email=${email}&userType=${userType}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.user) {
+                        const name = data.user.name || email;
+                        const phone = data.user.phone_number;
+                        usernameDisplay.textContent = name;
+    
+                        // Save phone number to localStorage for future use
+                        localStorage.setItem("userPhone", phone);
+    
+                        // Fetch Due Payments
+                        fetch(`/getDuePayments?phone=${phone}`)
+                            .then(res => res.json())
+                            .then(dueData => {
+                                const dueTable = document.getElementById("dueTable");
+                                dueTable.innerHTML = "";
+    
+                                if (dueData.success && dueData.due_bills.length > 0) {
+                                    dueData.due_bills.forEach((bill, index) => {
+                                        const row = document.createElement("tr");
+                                        row.innerHTML = `
+                                            <td>${index + 1}</td>
+                                            <td>${bill}</td>
+                                            <td><button class="pay-button" data-bill="${bill}" data-phone="${phone}">Pay Now</button></td>
+                                        `;
+                                        dueTable.appendChild(row);
+                                    });
+    
+                                    document.querySelectorAll(".pay-button").forEach(button => {
+                                        button.addEventListener("click", () => {
+                                            const billType = button.getAttribute("data-bill");
+                                            const phoneNum = button.getAttribute("data-phone");
+    
+                                            fetch("/markBillAsPaid", {
+                                                method: "POST",
+                                                headers: { "Content-Type": "application/json" },
+                                                body: JSON.stringify({ phone_number: phoneNum, bill_type: billType })
+                                            })
+                                            .then(res => res.json())
+                                            .then(result => {
+                                                if (result.success) {
+                                                    alert("Payment Successful!");
+                                                    button.closest("tr").remove();
+                                                } else {
+                                                    alert("Payment failed. Try again.");
+                                                }
+                                            })
+                                            .catch(err => {
+                                                console.error("Error making payment:", err);
+                                                alert("An error occurred.");
+                                            });
+                                        });
+                                    });
+                                } else {
+                                    dueTable.innerHTML = `<tr><td colspan="3">No due payments found.</td></tr>`;
+                                }
+                            });
+    
+                        // Fetch Paid Payments
+                        fetch(`/getPaidPayments?phone=${phone}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                const paidTable = document.getElementById("paidTable");
+                                paidTable.innerHTML = "";
+    
+                                if (data.success && data.paid_bills.length > 0) {
+                                    data.paid_bills.forEach((bill, index) => {
+                                        const row = document.createElement("tr");
+                                        row.innerHTML = `
+                                            <td>${index + 1}</td>
+                                            <td>${bill}</td>
+                                        `;
+                                        paidTable.appendChild(row);
+                                    });
+                                } else {
+                                    paidTable.innerHTML = `<tr><td colspan="2">No paid payments found.</td></tr>`;
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Error fetching paid payments:", error);
+                                document.getElementById("paidTable").innerHTML =
+                                    `<tr><td colspan="2">An error occurred.</td></tr>`;
+                            });
+                    } else {
+                        usernameDisplay.textContent = "Unknown User";
+                    }
+                });
+    
+            // Dropdown toggle
+            usernameDisplay.addEventListener("click", () => {
+                dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+            });
+    
+            const userInfo = document.querySelector(".user-info");
+            userInfo.addEventListener("mouseenter", () => {
+                dropdown.style.display = "flex";
+            });
+            userInfo.addEventListener("mouseleave", () => {
+                dropdown.style.display = "none";
+            });
+        });
+    </script>    
+
+</body>
+</html>

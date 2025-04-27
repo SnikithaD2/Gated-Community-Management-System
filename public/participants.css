@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=Port+Lligat+Slab&family=Qwigley&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Qwigley&display=swap');
+
+/* Set font styles */
+:root {
+    font-family: "PT Serif", serif;
+}
+
+html, body {
+    height: 103.7vh; /* instead of min-height: 103.7vh */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(rgba(118, 214, 255, 0.8), rgba(255, 255, 255, 0.8)),
+                 url('images/RP_image.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden; /* This hides anything outside viewport */
+    font-family: "PT Serif";
+}
+
+/* Header styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: transparent;
+}
+
+/* Main heading */
+.main-head {
+    font-family: "Port Lligat Slab";
+    font-size: 55px;
+    margin: 0;
+}
+
+/* Tagline below the heading */
+.tagline {
+    font-family: "Port Lligat Slab";
+    font-size: 28px;
+    color: #FF264E;
+    margin: 0;
+}
+
+/* Header buttons container */
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* Go Back button */
+.go-back {
+    background: white;
+    border: none;
+    font-size: 18px;
+    border-radius: 5px;
+    padding: 5px 12px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.go-back:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+/* User info section */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+}
+
+/* User profile icon */
+.user-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+/* Main content should push the footer down */
+main {
+    flex-grow: 1; /* This ensures the footer stays at the bottom */
+    padding: 20px;
+    overflow-y: hidden;
+}
+
+/* Content container */
+.content-container {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Button styles */
+.back-btn {
+    padding: 6px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* Table styles */
+.participants-table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background: white;
+}
+
+.participants-table th, 
+.participants-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ccc;
+}
+
+.participants-table th {
+    background-color: #4A90E2;
+    color: white;
+    text-align: center;
+}
+
+/* Updated row styling - all rows same color */
+.participants-table tr {
+    background-color: #ffffff;
+}
+
+/* Status messages */
+.loading {
+    text-align: center;
+    padding: 20px;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Footer styling */
+.footer-text {
+    font-family: Qwigley;
+    font-size: 27px;
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    background: #4A4A4A;
+    color: white;
+    text-align: center;
+    margin-top: auto; /* Pushes footer to the bottom */
+}
+
+/* Ensure header and content stay above */
+header, .content, footer {
+    position: relative;
+    z-index: 1; /* Higher than the overlay image */
+}

@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Port+Lligat+Slab&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Qwigley&display=swap');
+
+/* Background styling */
+.hero-section {
+    background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+            url('images/community.png') no-repeat center center;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    padding-top: 10px;
+}
+
+/* Reduced Overlay effect */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2); /* Reduced opacity */
+    z-index: 1;
+}
+
+/* Header text */
+.header-text {
+    position: absolute;
+    top: 20px;  /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 100%;
+    z-index: 10;
+}
+
+.header-text h1 {
+    font-family: "Port Lligat Slab";
+    font-size: 55px;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    padding-left: 3%;
+}
+
+.sub-heading {
+    font-family: "Port Lligat Slab";
+    font-size: 28px;
+    color: #FF264E;
+    margin-bottom: 20px;
+    padding-left: 3%;
+}
+
+.go-back {
+    position: absolute;
+    top: 3%;
+    right: 3%;
+    background: white;
+    border: none;
+    font-size: 20px;
+    border-radius: 5px;
+    padding: 5px 12px;
+    cursor: pointer;
+    margin-right: 5px; /* Reduce spacing */
+}
+
+/* Login Box Styling */
+.login-box {
+    font-family: "PT Serif";
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+/* Login Box Styling */
+.login-title {
+    font-family: "PT Serif";
+    background: #42bff5; /* Sky blue color */
+    color: white;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+    margin: -20px -20px 15px -20px;
+}
+
+
+/* Ensuring labels and input fields start from the same position */
+.form-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+/* Adjusting the label width to be uniform */
+.label-width {
+    width: 100px; /* Adjust width as needed */
+    text-align: left;
+}
+
+/* Ensuring input fields are aligned */
+.input-field {
+    flex-grow: 1; /* Makes sure input fields align properly */
+    width: calc(100% - 110px); /* Adjust width based on label width */
+    max-width: 250px; /* Prevents extra-wide input fields */
+}
+
+/* Button Styling */
+.btn-success {
+    background: linear-gradient(rgba(27, 195, 66, 1), rgba(13, 93, 32, 0.7));
+    border: none;
+    color: white;
+    transition: 0.3s;
+}
+
+.btn-secondary {
+    background-color: #aaa;
+    color: #00000080;
+    border: none;
+}
+
+/* Footer Styling */
+.footer-text {
+    font-family: Qwigley;
+    font-size: 27px;
+    position: relative;
+    z-index: 3;  /* Higher than the overlay */
+    background: #4A4A4A;  
+    color: white;
+    padding: 15px;
+}

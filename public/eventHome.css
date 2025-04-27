@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=Port+Lligat+Slab&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Qwigley&display=swap');
+
+/* Set font styles */
+:root {
+    font-family: "PT Serif", serif;
+}
+
+html, body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(rgba(118, 214, 255, 0.8), rgba(254, 255, 212, 0.8)), 
+                url('images/RP_image.png'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-family: "PT Serif", serif;
+}
+
+/* Header styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: transparent;
+}
+
+/* Main heading */
+.main-head {
+    font-family: "Port Lligat Slab";
+    font-size: 55px;
+    margin: 0;
+}
+
+/* Tagline below the heading */
+.tagline {
+    font-family: "Port Lligat Slab";
+    font-size: 28px;
+    color: #FF264E;
+    margin: 0;
+}
+
+.go-back {
+    background: white;
+    border: none;
+    font-size: 20px;
+    border-radius: 5px;
+    padding: 5px 12px;
+    cursor: pointer;
+    margin-right: 5px; /* Reduce spacing */
+}
+
+/* User info section */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+}
+
+/* User profile icon */
+.user-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+/* Main content should push the footer down */
+main {
+    flex-grow: 1; /* This ensures the footer stays at the bottom */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlayBox {
+    width: 90%; 
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    opacity: 0.85;
+    margin: 5%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: absolute;
+}
+
+.text-content {
+    width: 70%;                  /* Occupies 70% of the overlay box */
+    margin: 0 auto;              /* Centers the text block horizontally */
+    margin-bottom: 3%;
+}
+
+.eventBox {
+    width: 90%;
+    min-height: 50vh;
+    background: url('images/eventHome.png') center/cover no-repeat, white;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    position: relative; /* Important for positioning inner box */
+}
+
+/* Footer styling */
+.footer-text {
+    font-family: Qwigley;
+    font-size: 27px;
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    background: #4A4A4A;
+    color: white;
+    font-style: "italic";
+    text-align: center;
+    margin-top: auto; /* Pushes footer to the bottom */
+}
+
+/* Ensure header and content stay above */
+header, .content, footer {
+    position: relative;
+    z-index: 1; /* Higher than the overlay image */
+    overflow: hidden;
+}

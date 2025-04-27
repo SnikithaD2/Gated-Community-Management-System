@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitors</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="visitors.css">
+    <style>
+        .user-info {
+            position: relative;
+            cursor: pointer;
+        }
+    
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            flex-direction: column;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            z-index: 999;
+        }
+    
+        .dropdown-menu a {
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+            border-bottom: 1px solid #eee;
+        }
+    
+        .dropdown-menu a:last-child {
+            border-bottom: none;
+        }
+    
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+    
+</head>
+<body>
+    <header>
+        <div>
+            <h1 class="main-head">Aura Living</h1>
+            <p class="tagline">A Dream Come True</p>
+        </div>
+        <button class="go-back" onclick="window.location.href='staff.html'">Go Back</button>
+        <button class="manage-visitors" onclick="window.location.href='manage_visitors.html'">Manage Visitors</button>      
+        <div class="user-info">
+            <span id="username-display">Username</span>
+            <img src="images/userIcon.png" alt="User Icon" class="user-icon">
+            <div id="userDropdown" class="dropdown-menu">
+                <a href="profile.html">Profile</a>
+                <a href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div style="font-family: 'PT Serif'; 
+                margin-top: 30px;
+                margin-left: 30px;
+                font-size: 30px;
+                color: #424242;">
+            Visitors
+    </div>
+
+    <div class="container mt-4">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Visitor Name</th>
+                    <th>Phone Number</th>
+                    <th>Visit Time</th>
+                    <th>Flat Number</th>
+                    <th>Owner Name</th>
+                    <th>Owner Phone</th>
+                </tr>
+            </thead>
+            <tbody id="visitorTableBody">
+                <!-- Data will be dynamically loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="text-center footer-text">
+        Live your Dream with Aura
+    </footer>
+    <script>
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const email = localStorage.getItem("userEmail");
+            const userType = localStorage.getItem("userType");
+            const usernameDisplay = document.getElementById("username-display");
+            const dropdown = document.getElementById("userDropdown");
+
+            if (!email || !userType) {
+                usernameDisplay.textContent = "Not logged in";
+                return;
+            }
+
+            // Fetch the user details from the server
+            fetch(`/getUserDetails?email=${email}&userType=${userType}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.user) {
+                        const name = data.user.name || email;
+                        usernameDisplay.textContent = name;
+                    } else {
+                        usernameDisplay.textContent = "Unknown User";
+                    }
+                })
+                .catch(err => {
+                    console.error("Error fetching user details:", err);
+                    usernameDisplay.textContent = email; // fallback
+                });
+
+            // Dropdown toggle
+            usernameDisplay.addEventListener("click", () => {
+                dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+            });
+
+            const userInfo = document.querySelector(".user-info");
+            userInfo.addEventListener("mouseenter", () => {
+                dropdown.style.display = "flex";
+            });
+            userInfo.addEventListener("mouseleave", () => {
+                dropdown.style.display = "none";
+            });
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("/visitors")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tableBody = document.getElementById("visitorTableBody");
+                    tableBody.innerHTML = ""; // Clear previous
+
+                    if (data.length === 0) {
+                        tableBody.innerHTML = "<tr><td colspan='7'>No visitors found</td></tr>";
+                        return;
+                    }
+
+                    data.forEach(visitor => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${visitor.visitor_id}</td>
+                            <td>${visitor.visitor_name}</td>
+                            <td>${visitor.phone_number}</td>
+                            <td>${new Date(visitor.visit_time).toLocaleString()}</td>
+                            <td>${visitor.flat_number}</td>
+                            <td>${visitor.owner_name}</td>
+                            <td>${visitor.owner_phone}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error loading visitors:", error);
+                    const tableBody = document.getElementById("visitorTableBody");
+                    tableBody.innerHTML = `<tr><td colspan="7" style="color: red;">Failed to load visitors data.</td></tr>`;
+                });
+        });
+
+    </script>
+</body>
+</html>

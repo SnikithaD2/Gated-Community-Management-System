@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amenities</title>
+    <link rel="stylesheet" href="complaints.css">
+</head>
+<div class="overlay-image"></div>
+<body>
+    <header>
+        <div>
+            <h1 class="main-head">Aura Living</h1>
+            <p class="tagline">A Dream Come True</p>
+        </div>
+        <button class="go-back" onclick="window.location.href='staff.html'">Go Back</button>
+        <div class="user-info">
+            <span id="username-display">Username</span>
+            <img src="images/userIcon.png" alt="User Icon" class="user-icon">
+            <div id="userDropdown" class="dropdown-menu">
+              <a href="profile.html">Profile</a>
+              <a href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div style="font-family: 'PT Serif'; 
+                margin-left: 20px;
+                font-size: 30px;
+                color: #424242;">
+        Amenities Booked
+    </div>
+
+    <div class="content-box">
+        <div class="container" id="amenities-container"></div>
+    </div>
+      
+    <footer class="text-center footer-text">
+        Live your Dream with Aura
+    </footer>
+
+    <script>
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("http://localhost:3000/amenity_bookings")
+                .then((response) => {
+                if (!response.ok) throw new Error("Network response was not ok");
+                return response.json();
+                })
+                .then((data) => {
+                const container = document.getElementById("amenities-container");
+
+                data.forEach((item) => {
+                    const card = document.createElement("div");
+                    card.className = "complaint-card"; // reusing existing class
+
+                    card.innerHTML = `
+                    <div class="complaint-text">
+                        <h2>${item.amenity_name} - ${item.amenity_number}</h2>
+                        <p>
+                            Owner: ${item.owner_name} &nbsp;|&nbsp;
+                            Flat: ${item.flat_number} &nbsp;|&nbsp;
+                            Phone: ${item.phone_number} &nbsp;|&nbsp;
+                            Date: ${item.booking_date} &nbsp;|&nbsp;
+                            Time: ${item.start_time} to ${item.end_time}
+                        </p>
+                    </div>
+                    `;
+
+                    container.appendChild(card);
+                });
+                })
+                .catch((error) => {
+                console.error("Error loading amenities:", error);
+                });
+            });
+            document.addEventListener("DOMContentLoaded", () => {
+            const email = localStorage.getItem("userEmail");
+            const userType = localStorage.getItem("userType");
+            const usernameDisplay = document.getElementById("username-display");
+            const dropdown = document.getElementById("userDropdown");
+
+            if (!email || !userType) {
+                usernameDisplay.textContent = "Not logged in";
+                return;
+            }
+
+            // Fetch the user details from the server
+            fetch(`/getUserDetails?email=${email}&userType=${userType}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.user) {
+                        const name = data.user.name || email;
+                        usernameDisplay.textContent = name;
+                    } else {
+                        usernameDisplay.textContent = "Unknown User";
+                    }
+                })
+                .catch(err => {
+                    console.error("Error fetching user details:", err);
+                    usernameDisplay.textContent = email; // fallback
+                });
+
+            // Dropdown toggle
+            usernameDisplay.addEventListener("click", () => {
+                dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+            });
+
+            const userInfo = document.querySelector(".user-info");
+            userInfo.addEventListener("mouseenter", () => {
+                dropdown.style.display = "flex";
+            });
+            userInfo.addEventListener("mouseleave", () => {
+                dropdown.style.display = "none";
+            });
+        });
+    </script>
+</body>
+</html>

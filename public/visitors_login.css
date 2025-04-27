@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Port+Lligat+Slab&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Qwigley&display=swap');
+
+:root {
+    font-family: "PT Serif";
+}
+html, body {
+    height: 110%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(rgba(118, 214, 255, 0.8), rgba(255, 255, 255, 0.8)), 
+                url('images/RP_image.png'); /* Background Image */
+    background-size: cover; /* Ensure it covers the entire page */
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: "PT Serif";
+}
+.container {
+    flex-grow: 1; /* Ensures content pushes footer down */
+    max-width: 80%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1%;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px; /* Reduce padding for tighter spacing */
+    gap: 5px; /* Reduce gap between elements */
+}
+
+.go-back {
+    background: white;
+    border: none;
+    font-size: 18px;
+    border-radius: 5px;
+    padding: 5px 12px;
+    cursor: pointer;
+    margin-right: 5px; /* Reduce spacing */
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Reduce gap between text and icon */
+    font-size: 20px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 24px;
+}
+header .main-head {
+    font-family: "Port Lligat Slab";
+    font-size: 55px;
+}
+header .tagline {
+    font-family: "Port Lligat Slab";
+    font-size: 28px;
+    color: #FF264E;
+    margin: 0%;
+    margin-bottom: 20px;
+}
+
+.user-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+h3 {
+    color: #696969;
+    font-size: 38px;
+    margin-bottom: 5%;
+}
+.mb-3 {
+    display: flex;
+    justify-content: space-between;
+}
+.form-label {
+    font-size: 20px;
+    padding-left: 5%;
+}
+.form-control {
+    width: 70%;
+    height: 35px;
+    font-size: 16px;
+    padding: 5px;
+}
+.otp-button {
+    display: flex;
+    justify-content: end;
+}
+.otp-button button {
+    width: 10%;
+    height: 35px;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(rgba(27, 195, 66, 1), rgba(13, 93, 32, 0.7));
+    border-radius: 4px;
+    color: white;
+    border: none;
+}
+.final-buttons {
+    display: flex;
+    justify-content: end;
+}
+.final-buttons button {
+    width: 10%;
+    height: 35px;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    color: black;
+    border: none;
+}
+.input-group .form-control {
+    height: 30px;
+}
+
+/* Footer styling */
+.footer-text {
+    font-family: Qwigley;
+    font-size: 27px;
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    background: #4A4A4A;
+    color: white;
+    font-style: "italic";
+    text-align: center;
+    margin-top: auto; /* Pushes footer to the bottom */
+}
+
+/* Ensure header and content stay above */
+header, .content, footer {
+    position: relative;
+    z-index: 1; /* Higher than the overlay image */
+}

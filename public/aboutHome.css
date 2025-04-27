@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=Port+Lligat+Slab&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Qwigley&display=swap');
+
+/* Set font styles */
+:root {
+    font-family: "PT Serif", serif;
+}
+
+/* Ensure full height layout */
+html, body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(rgba(118, 214, 255, 0.8), rgba(255, 255, 255, 0.8)), 
+                url('images/RP_image.png'); /* Background Image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: "PT Serif";
+}
+
+/* Header styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: transparent;
+}
+
+/* Main heading */
+.main-head {
+    font-family: "Port Lligat Slab";
+    font-size: 55px;
+    margin: 0;
+}
+
+/* Tagline below the heading */
+.tagline {
+    font-family: "Port Lligat Slab";
+    font-size: 28px;
+    color: #FF264E;
+    margin: 0;
+}
+
+/* Go Back button */
+.go-back {
+    background: white;
+    border: none;
+    font-size: 18px;
+    border-radius: 5px;
+    padding: 5px 12px;
+    cursor: pointer;
+}
+
+/* User info section */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+}
+
+/* User profile icon */
+.user-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+/* Main content should push the footer down */
+main {
+    flex-grow: 1; /* This ensures the footer stays at the bottom */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+section {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Intro Section */
+.intro h2 {
+    text-align: center;
+    color: #004080;
+}
+
+/* Mission & Vision */
+.mission-vision {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.mission, .vision {
+    flex: 1;
+    background: #e6f2ff;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* Features Section */
+.features h2 {
+    text-align: center;
+    color: #004080;
+}
+
+.feature-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.feature {
+    background: #e6f2ff;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.feature h3 {
+    color: #004080;
+}
+
+.footer-text {
+    font-family: Qwigley;
+    font-size: 27px;
+    width: 100%;
+    padding: 15px;
+    background: #4A4A4A;
+    color: white;
+    font-style: italic;
+    text-align: center;
+}

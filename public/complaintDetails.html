@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Complaint Details</title>
+  <link rel="stylesheet" href="complaints.css" />
+  <style>
+    .details-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 30px;
+      min-width: 600px;
+      margin: 100px auto;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      font-size: 18px;
+    }
+
+    .details-card h2 {
+        margin-top: 0px;
+        margin-bottom: 20px;
+        font-size: 28px;
+    }
+
+    .details-card p {
+      margin-bottom: 10px;
+    }
+
+    .assign-btn {
+        margin: 20px auto 0 auto; /* Top margin 20px, horizontal auto to center */
+        padding: 10px 20px;
+        background: linear-gradient(to bottom, #1BC342, #0D5D20);
+        border: none;
+        color: white;
+        width: 80%;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block; /* Makes margin auto work */
+    }
+
+  </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h1 class="main-head">Aura Living</h1>
+            <p class="tagline">A Dream Come True</p>
+        </div>
+        <button class="go-back" onclick="window.location.href='complaints.html'">Go Back</button>
+        <div class="user-info">
+            <span id="username-display">Username</span>
+            <img src="images/userIcon.png" alt="User Icon" class="user-icon">
+            <div id="userDropdown" class="dropdown-menu">
+              <a href="profile.html">Profile</a>
+              <a href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="details-card" id="details"></div>
+
+    <footer class="text-center footer-text">
+        Live your Dream with Aura
+    </footer>
+
+    <script>
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+    
+        function formatDate(isoString) {
+            const options = {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            };
+            const date = new Date(isoString);
+            return date.toLocaleString("en-GB", options);
+        }
+    
+        document.addEventListener("DOMContentLoaded", () => {
+            const complaint = JSON.parse(localStorage.getItem("selectedComplaint"));
+            const container = document.getElementById("details");
+    
+            if (complaint) {
+                container.innerHTML = `
+                    <h2>${complaint.complaint}</h2>
+                    <p><strong>Owner:</strong> ${complaint.owner_name}</p>
+                    <p><strong>Flat number:</strong> ${complaint.flat_number}</p>
+                    <p><strong>Phone number:</strong> ${complaint.phone_number}</p>
+                    <p><strong>Available time:</strong> ${formatDate(complaint.available_date)}, ${complaint.available_from} - ${complaint.available_to}</p>
+                    <button class="assign-btn">Assign worker</button>
+                `;
+    
+                const button = document.querySelector(".assign-btn");
+                button.addEventListener("click", () => {
+                    fetch("http://localhost:3000/assign-worker", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ id: complaint.id })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Worker assigned successfully!");
+                            button.textContent = "Assigned";
+                            button.disabled = true;
+                        } else {
+                            alert("Failed to assign worker.");
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Error assigning worker:", err);
+                        alert("An error occurred.");
+                    });
+                });
+            } else {
+                container.innerHTML = "<p>No complaint selected.</p>";
+            }
+    
+            // User profile handling
+            const email = localStorage.getItem("userEmail");
+            const userType = localStorage.getItem("userType");
+            const usernameDisplay = document.getElementById("username-display");
+            const dropdown = document.getElementById("userDropdown");
+    
+            if (!email || !userType) {
+                usernameDisplay.textContent = "Not logged in";
+                return;
+            }
+    
+            fetch(`/getUserDetails?email=${email}&userType=${userType}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.user) {
+                        const name = data.user.name || email;
+                        usernameDisplay.textContent = name;
+                    } else {
+                        usernameDisplay.textContent = "Unknown User";
+                    }
+                })
+                .catch(err => {
+                    console.error("Error fetching user details:", err);
+                    usernameDisplay.textContent = email;
+                });
+    
+            usernameDisplay.addEventListener("click", () => {
+                dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+            });
+    
+            const userInfo = document.querySelector(".user-info");
+            userInfo.addEventListener("mouseenter", () => {
+                dropdown.style.display = "flex";
+            });
+            userInfo.addEventListener("mouseleave", () => {
+                dropdown.style.display = "none";
+            });
+        });
+    </script>    
+
+</body>
+</html>
