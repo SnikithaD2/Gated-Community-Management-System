@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitors</title>
+    <link rel="stylesheet" href="manage_visitors.css">
+    <style>
+        .user-info {
+            position: relative;
+            cursor: pointer;
+        }
+    
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            flex-direction: column;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            z-index: 999;
+        }
+    
+        .dropdown-menu a {
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+            border-bottom: 1px solid #eee;
+        }
+    
+        .dropdown-menu a:last-child {
+            border-bottom: none;
+        }
+    
+        .dropdown-menu a:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h1 class="main-head">Aura Living</h1>
+            <p class="tagline">A Dream Come True</p>
+        </div>
+        <button class="go-back" onclick="window.location.href='owner.html'">Go Back</button>
+        <div class="user-info">
+            <span id="username-display">Username</span>
+            <img src="images/userIcon.png" alt="User Icon" class="user-icon">
+            <div id="userDropdown" class="dropdown-menu">
+                <a href="profile.html">Profile</a>
+                <a href="#" onclick="logout()">Logout</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="search-container">
+            <input type="text" id="nameSearch" placeholder="Enter name to search">
+            <button onclick="searchVisitors()"><i class="fas fa-search"></i></button>
+        </div>
+
+        <div class="date-container">
+            <label for="monthSelect">Visitors on:</label>
+            <select id="monthSelect" onchange="updateCalendar()">
+
+                <option value="0">January</option>
+                <option value="1">February</option>
+                <option value="2">March</option>
+                <option value="3">April</option>
+                <option value="4">May</option>
+                <option value="5">June</option>
+                <option value="6">July</option>
+                <option value="7">August</option>
+                <option value="8">September</option>
+                <option value="9">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+            </select>
+
+            <label for="yearSelect">Year:</label>
+            <select id="yearSelect" onchange="updateCalendar()">
+
+                <script>
+                    let yearSelect = document.getElementById('yearSelect');
+                    for (let i = 2020; i <= 2030; i++) {
+                        let option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = i;
+                        yearSelect.appendChild(option);
+                    }
+                </script>
+            </select>
+        </div>
+
+        <div class="calendar" style="margin-bottom: 10px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+                    </tr>
+                </thead>
+                <tbody id="calendarBody"></tbody>
+            </table>
+        </div>
+
+        <div class="btn-container">
+            <button class="search-btn" onclick="searchVisitors()">Search</button>
+        </div>
+
+        <div class="visitors-table-container">
+            <table id="visitorsTable">
+                <thead>
+                    <tr>
+                        <th>Visitor no.</th>
+                        <th>Visitor Name</th>
+                        <th>Phone Number</th>
+                        <th>Flat Number</th>
+                    </tr>
+                </thead>
+                <tbody id="visitorsTableBody"></tbody>
+            </table>
+        </div>
+    </main>
+    <footer class="text-center footer-text">
+        Live your Dream with Aura
+    </footer>
+    <script>
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+        
+        function fetchVisitors({ name = '', date = '' }) {
+            const ownerPhone = localStorage.getItem("userPhone");  // get it fresh every time
+            if (!ownerPhone) {
+                console.error("Owner phone not found in local storage");
+                displayError("User not logged in.");
+                return;
+            }
+
+            fetch('/searchUserVisitorsByDate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, date, ownerPhone })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                displayVisitors(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                displayError("Failed to fetch visitor data. Please try again.");
+            });
+        }
+        
+        function displayVisitors(visitors) {
+            const tbody = document.getElementById("visitorsTableBody");
+            tbody.innerHTML = ""; // Clear old data
+
+            if (!visitors || visitors.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='7'>No visitor data found.</td></tr>";
+                return;
+            }
+
+            visitors.forEach(visitor => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${visitor.visitor_id}</td>
+                    <td>${visitor.visitor_name}</td>
+                    <td>${visitor.phone_number}</td>
+                    <td>${new Date(visitor.visit_time).toLocaleString()}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const email = localStorage.getItem("userEmail");
+            const userType = localStorage.getItem("userType");
+            const usernameDisplay = document.getElementById("username-display");
+            const dropdown = document.getElementById("userDropdown");
+            let ownerPhone = localStorage.getItem("userPhone");
+
+            if (!email || !userType) {
+                usernameDisplay.textContent = "Not logged in";
+                return;
+            }
+
+            // Fetch the user details from the server
+            fetch(`/getUserDetails?email=${email}&userType=${userType}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.user) {
+                        const name = data.user.name || email;
+                        usernameDisplay.textContent = name;
+                    } else {
+                        usernameDisplay.textContent = "Unknown User";
+                    }
+                })
+                .catch(err => {
+                    console.error("Error fetching user details:", err);
+                    usernameDisplay.textContent = email; // fallback
+                });
+
+            // Dropdown toggle
+            usernameDisplay.addEventListener("click", () => {
+                dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+            });
+
+            const userInfo = document.querySelector(".user-info");
+            userInfo.addEventListener("mouseenter", () => {
+                dropdown.style.display = "flex";
+            });
+            userInfo.addEventListener("mouseleave", () => {
+                dropdown.style.display = "none";
+            });
+
+            // ✅ Call fetchVisitors when the page loads
+            fetchVisitors({ownerPhone});
+    });
+
+        // Initialize calendar with current month and year
+        document.addEventListener("DOMContentLoaded", function () {
+            const currentDate = new Date();
+            document.getElementById("monthSelect").value = currentDate.getMonth();
+            document.getElementById("yearSelect").value = currentDate.getFullYear();
+            updateCalendar();
+            
+            // Load all visitors initially
+            searchVisitors();
+        });
+
+        // Update calendar display
+        function updateCalendar() {
+            let month = document.getElementById("monthSelect").value;
+            let year = document.getElementById("yearSelect").value;
+            let calendarBody = document.getElementById("calendarBody");
+            calendarBody.innerHTML = "";
+
+            let firstDay = new Date(year, month, 1).getDay();
+            let totalDays = new Date(year, parseInt(month) + 1, 0).getDate();
+
+            let row = document.createElement("tr");
+            for (let i = 0; i < firstDay; i++) {
+                row.appendChild(document.createElement("td"));
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                let cell = document.createElement("td");
+                cell.textContent = day;
+                
+                // Highlight current day
+                const currentDate = new Date();
+                if (year == currentDate.getFullYear() && 
+                    month == currentDate.getMonth() && 
+                    day == currentDate.getDate()) {
+                    cell.style.backgroundColor = "#3498db";
+                    cell.style.color = "white";
+                }
+                
+                cell.onclick = function() {
+                    const month = document.getElementById("monthSelect").value;
+                    const year = document.getElementById("yearSelect").value;
+                    const selectedDate = `${year}-${String(parseInt(month) + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    
+                    document.getElementById('nameSearch').value = ''; // Clear name search
+                    fetchVisitors({ date: selectedDate });
+                };
+                
+                row.appendChild(cell);
+                if ((firstDay + day) % 7 === 0) {
+                    calendarBody.appendChild(row);
+                    row = document.createElement("tr");
+                }
+            }
+
+            if (row.children.length > 0) {
+                calendarBody.appendChild(row);
+            }
+        }
+        // Handle search button click
+        function searchVisitors() {
+            const name = document.getElementById('nameSearch').value.trim();
+            const month = document.getElementById('monthSelect').value;
+            const year = document.getElementById('yearSelect').value;
+            const selectedDate = `${year}-${String(parseInt(month) + 1).padStart(2, '0')}`;
+            
+            fetchVisitors({ name, date: selectedDate });
+        }
+        
+        // Display error message
+        function displayError(message) {
+            const tableBody = document.getElementById('visitorsTableBody');
+            tableBody.innerHTML = '';
+            
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.colSpan = 6;
+            cell.textContent = message;
+            cell.style.textAlign = 'center';
+            cell.style.color = 'red';
+            cell.style.padding = '20px';
+            row.appendChild(cell);
+            tableBody.appendChild(row);
+        }
+    </script>
+</body>
+</html>

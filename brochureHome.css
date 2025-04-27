@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=Port+Lligat+Slab&family=Qwigley&display=swap');
+       
+/* Set font styles */
+:root {
+    font-family: "PT Serif", serif;
+}
+
+/* Ensure full height layout */
+html, body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(rgba(118, 214, 255, 0.8), rgba(255, 255, 255, 0.8)),
+                    url('images/RP_image.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: "PT Serif";
+}
+
+/* Header styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: transparent;
+}
+
+/* Main heading */
+.main-head {
+    font-family: "Port Lligat Slab";
+    font-size: 55px;
+    margin: 0;
+}
+
+/* Tagline below the heading */
+.tagline {
+    font-family: "Port Lligat Slab";
+    font-size: 28px;
+    color: #FF264E;
+    margin: 0;
+}
+
+/* Go Back button */
+.go-back {
+    background: white;
+    border: none;
+    font-size: 18px;
+    border-radius: 5px;
+    padding: 5px 12px;
+    cursor: pointer;
+}
+
+/* User info section */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+}
+
+/* User profile icon */
+.user-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+/* Main content */
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px 60px 40px;
+}
+
+/* Brochure styling */
+.brochure-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+.brochure-title {
+    font-family: "Port Lligat Slab";
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.highlight {
+    color: #FF264E;
+}
+
+.feature-section {
+    margin-bottom: 40px;
+}
+
+.feature-heading {
+    font-family: "Port Lligat Slab";
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #FF264E;
+    padding-bottom: 10px;
+}
+
+.feature-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-icon {
+    font-size: 40px;
+    color: #FF264E;
+    margin-bottom: 15px;
+}
+
+.amenity-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.amenity-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.amenity-list li:before {
+    content: "✓";
+    color: #FF264E;
+    margin-right: 10px;
+}
+
+.cta-section {
+    background: linear-gradient(rgba(118, 214, 255, 0.2), rgba(255, 255, 255, 0.2));
+    padding: 30px;
+    text-align: center;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.property-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.testimonial {
+    font-style: italic;
+    position: relative;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.testimonial:before {
+    content: "";
+    font-size: 60px;
+    color: rgba(118, 214, 255, 0.3);
+    position: absolute;
+    left: -20px;
+    top: -20px;
+}
+
+/* Floor plan comparison */
+.floor-plan-comparison {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.floor-plan-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.floor-plan-table th, .floor-plan-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.floor-plan-table th {
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.floor-plan-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Footer styling */
+.footer-text {
+    font-family: Qwigley;
+    font-size: 27px;
+    width: 100%;
+    padding: 15px;
+    background: #4A4A4A;
+    color: white;
+    font-style: italic;
+    text-align: center;
+}
