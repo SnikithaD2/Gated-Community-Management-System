@@ -3,4 +3,4 @@ A comprehensive web-based platform for efficient residential society management,
 
 **Tech Stack**
 
-Node.js, Express.js for the backend; MySQL for database management; HTML, CSS, and JavaScript for front-end development.
+Node.js, Express.js for the backend; MySQL for database management; HTML, CSS, and JavaScript for frontend development.
